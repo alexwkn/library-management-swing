@@ -1,0 +1,15 @@
+# Build
+target/
+out/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Environnement local
+.env
+
+# OS
+.DS_Store
+Thumbs.db

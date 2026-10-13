@@ -1,0 +1,25 @@
+# Base MySQL de démonstration, initialisée avec les données de database/librarynamur.sql
+# Port 3307 côté machine pour ne pas entrer en conflit avec un MySQL déjà installé.
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: library-management-mysql
+    environment:
+      MYSQL_DATABASE: librarynamur
+      MYSQL_USER: ${DB_USER:-library}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-library}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/librarynamur.sql:/docker-entrypoint-initdb.d/01-librarynamur.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u$${MYSQL_USER} -p$${MYSQL_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  mysql_data:
